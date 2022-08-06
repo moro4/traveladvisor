@@ -5,11 +5,10 @@ import LocationOnOutlinedIcon from "@material-ui/icons/LocationOnOutlined";
 import Rating from "@material-ui/lab/Rating";
 import useStyles from "./styles";
 
-function Map() {
-
+function Map({setCoordinates, setBounds, coordinates}) {
+   console.log('Initial coordinates in Map', coordinates);
    const classes = useStyles();
    const isMobile = useMediaQuery('(min-width: 600px)');
-   const coordinates = {lat: 10.99835602, lng: 77.01502627};
 
    return (
       <div style={{ height: '85vh', width: '100%' }}>
@@ -20,7 +19,12 @@ function Map() {
             center={coordinates}
             margin={[50, 50, 50, 50]}
             options={''}
-            onChange={() => {}}
+            onChange={(event) => {
+               setCoordinates({lat: event.center.lat, lng: event.center.lng});
+               setBounds(
+                  {ne: event.marginBounds.ne, sw: event.marginBounds.sw}
+               );
+            }}
             onChildClick={() => {}}
          >
 
