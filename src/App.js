@@ -11,6 +11,9 @@ function App() {
    const [coordinates, setCoordinates] = useState({});
    const [bounds, setBounds] = useState(null);
    const [isLoading, setIsLoading] = useState(false);
+   const [type, setType] = useState('restaurants');
+   const [rating, setRating] = useState(0);
+   const [filteredPlacesByRating, setFilteredPlacesByRating] = useState([]);
 
    useEffect(() => {
       navigator.geolocation.getCurrentPosition(
@@ -23,7 +26,7 @@ function App() {
    useEffect(() => {
       setIsLoading(true);
       if(bounds) {
-         getPlacesData(bounds.sw, bounds.ne).then((data) => {
+         getPlacesData(type, bounds.sw, bounds.ne).then((data) => {
 
             var filteredData = data.filter(place => (
                // remove advertising
@@ -33,12 +36,16 @@ function App() {
             filteredData.forEach(place => (
                place.ref = place?.ref ?? createRef()
             ));
-
             setPlaces(filteredData);
             setIsLoading(false);
          })
       }
-   }, [coordinates, bounds]);
+   }, [type, coordinates, bounds]);
+
+   useEffect(() => {
+      const filteredPlaces = places.filter((place) => place.rating >= rating);
+      setFilteredPlacesByRating(filteredPlaces);
+   }, [rating, places]);
 
    return (
       <>
@@ -46,7 +53,17 @@ function App() {
          <Header />
          <Grid container spacing={3} style={{ width: '100%' }}>
             <Grid item xs={12} md={4}>
-               <List places={places} isLoading={isLoading}
+               <List
+                  isLoading={isLoading}
+                  type={type}
+                  setType={setType}
+                  rating={rating}
+                  setRating={setRating}
+                  places={
+                     filteredPlacesByRating.length
+                        ? filteredPlacesByRating
+                        : places
+                  }
                />
             </Grid>
             <Grid item xs={12} md={8}>
@@ -54,7 +71,11 @@ function App() {
                   setCoordinates={setCoordinates}
                   setBounds={setBounds}
                   coordinates={coordinates}
-                  places={places}
+                  places={
+                     filteredPlacesByRating.length
+                        ? filteredPlacesByRating
+                        : places
+                  }
                />
             </Grid>
          </Grid>

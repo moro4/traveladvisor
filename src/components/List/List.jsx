@@ -6,11 +6,9 @@ import {
 import useStyles from './styles';
 import PlaceDetails from '../PlaceDetails/PlaceDetails';
 
-function List({ places, isLoading, listCardRefs }) {
+function List({ places, isLoading, type, setType, rating, setRating }) {
 
    const classes = useStyles();
-   const [type, setType] = useState('restaurants');
-   const [rating, setRating] = useState(0);
 
    return (
       <div className={classes.container}>
