@@ -10,11 +10,11 @@ import useStyles from './styles';
 
 const placeholder = 'https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg';
 
-function PlaceDetails({ place }) {
+function PlaceDetails({ place }, ref) {
    const classes = useStyles();
 
    return (
-      <Card elevation={6}>
+      <Card ref={ref} elevation={6}>
 
          <CardMedia
             component="img"
@@ -29,6 +29,13 @@ function PlaceDetails({ place }) {
             <Typography gutterBottom variant="h5">
                {place.name}
             </Typography>
+
+            <Box display="flex" justifyContent="space-between">
+               <Rating value={Number(place.rating)} readOnly/>
+               <Typography gutterBottom variant='subtitle1'>
+                  out of {place.num_reviews} reviews
+               </Typography>
+            </Box>
 
             <Box display="flex" justifyContent="space-between">
                <Typography variant='subtitle1'>Price</Typography>
@@ -97,4 +104,4 @@ function PlaceDetails({ place }) {
    )
 }
 
-export default PlaceDetails;
+export default React.forwardRef(PlaceDetails);

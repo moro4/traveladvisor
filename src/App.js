@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
 import { CssBaseline, Grid } from '@material-ui/core';
 import Header from './components/Header/Header';
 import List from './components/List/List';
-import PlaceDetails from './components/PlaceDetails/PlaceDetails';
 import Map from './components/Map/Map';
 import getPlacesData from './api';
 
@@ -11,6 +10,7 @@ function App() {
    const [places, setPlaces] = useState([]);
    const [coordinates, setCoordinates] = useState({});
    const [bounds, setBounds] = useState(null);
+   const [isLoading, setIsLoading] = useState(false);
 
    useEffect(() => {
       navigator.geolocation.getCurrentPosition(
@@ -21,12 +21,21 @@ function App() {
    }, []);
 
    useEffect(() => {
+      setIsLoading(true);
       if(bounds) {
-         console.log('Bounds in effect', bounds);
-         console.log('Coordinates in effect', coordinates);
          getPlacesData(bounds.sw, bounds.ne).then((data) => {
-            console.log('Data from API call', data);
-            setPlaces(data);
+
+            var filteredData = data.filter(place => (
+               // remove advertising
+               'latitude' in place && 'longitude' in place
+            ));
+
+            filteredData.forEach(place => (
+               place.ref = place?.ref ?? createRef()
+            ));
+
+            setPlaces(filteredData);
+            setIsLoading(false);
          })
       }
    }, [coordinates, bounds]);
@@ -37,13 +46,15 @@ function App() {
          <Header />
          <Grid container spacing={3} style={{ width: '100%' }}>
             <Grid item xs={12} md={4}>
-               <List places={places} />
+               <List places={places} isLoading={isLoading}
+               />
             </Grid>
             <Grid item xs={12} md={8}>
                <Map
                   setCoordinates={setCoordinates}
                   setBounds={setBounds}
                   coordinates={coordinates}
+                  places={places}
                />
             </Grid>
          </Grid>
