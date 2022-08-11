@@ -12,7 +12,7 @@ async function getPlacesData(type, sw, ne) {
                tr_longitude: ne.lng
             },
             headers: {
-               'X-RapidAPI-Key': '74608c746bmshcb2596b50696f66p1da4a4jsn203be4e90ac0',
+               'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
                'X-RapidAPI-Host': 'travel-advisor.p.rapidapi.com'
             }
          });
