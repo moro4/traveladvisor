@@ -17,7 +17,6 @@ function Map({ setCoordinates, setBounds, coordinates, places}) {
             defaultZoom={14}
             center={coordinates}
             margin={[50, 50, 50, 50]}
-            options={''}
             onChange={(event) => {
                setCoordinates({ lat: event.center.lat, lng: event.center.lng });
                setBounds(
