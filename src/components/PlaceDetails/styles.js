@@ -1,5 +1,4 @@
 import {makeStyles} from '@material-ui/core/styles';
-import { Subtitles } from '@material-ui/icons';
 
 export default makeStyles(() => ({
    chip: {
